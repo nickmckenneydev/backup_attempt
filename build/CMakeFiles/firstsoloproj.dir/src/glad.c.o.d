@@ -1,5 +1,5 @@
 CMakeFiles/firstsoloproj.dir/src/glad.c.o: \
- /home/a/Desktop/backup_attempt/src/glad.c /usr/include/stdc-predef.h \
+ /home/a/Desktop/FirstSoloProj/src/glad.c /usr/include/stdc-predef.h \
  /usr/include/stdio.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -51,7 +51,7 @@ CMakeFiles/firstsoloproj.dir/src/glad.c.o: \
  /usr/include/x86_64-linux-gnu/bits/stdlib-float.h /usr/include/string.h \
  /usr/include/x86_64-linux-gnu/bits/types/locale_t.h \
  /usr/include/x86_64-linux-gnu/bits/types/__locale_t.h \
- /usr/include/strings.h /home/a/Desktop/backup_attempt/src/glad.h \
+ /usr/include/strings.h /home/a/Desktop/FirstSoloProj/src/glad.h \
  /usr/include/KHR/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/wchar.h \

@@ -1,6 +1,6 @@
 CMakeFiles/firstsoloproj.dir/src/main.cpp.o: \
- /home/a/Desktop/backup_attempt/src/main.cpp /usr/include/stdc-predef.h \
- /home/a/Desktop/backup_attempt/src/glad.h /usr/include/KHR/khrplatform.h \
+ /home/a/Desktop/FirstSoloProj/src/main.cpp /usr/include/stdc-predef.h \
+ /home/a/Desktop/FirstSoloProj/src/glad.h /usr/include/KHR/khrplatform.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stdint.h /usr/include/stdint.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -19,9 +19,9 @@ CMakeFiles/firstsoloproj.dir/src/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/stdint-least.h \
  /usr/local/include/GLFW/glfw3.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/stddef.h \
- /home/a/Desktop/backup_attempt/src/shader.h \
- /home/a/Desktop/backup_attempt/src/glm/glm.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/_fixes.hpp \
+ /home/a/Desktop/FirstSoloProj/src/shader.h \
+ /home/a/Desktop/FirstSoloProj/src/glm/glm.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/_fixes.hpp \
  /usr/include/c++/13/cmath /usr/include/c++/13/bits/requires_hosted.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/13/bits/os_defines.h \
@@ -104,79 +104,79 @@ CMakeFiles/firstsoloproj.dir/src/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/uio_lim.h /usr/include/c++/13/cfloat \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/float.h \
  /usr/include/c++/13/cassert /usr/include/assert.h \
- /home/a/Desktop/backup_attempt/src/glm/fwd.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_int.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/setup.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/fwd.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_int.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/setup.hpp \
  /usr/include/c++/13/cstddef \
- /home/a/Desktop/backup_attempt/src/glm/detail/../simd/platform.h \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../simd/platform.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/emmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/xmmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/mmintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/mm_malloc.h \
  /usr/include/c++/13/stdlib.h /usr/include/c++/13/cstdlib \
  /usr/include/c++/13/cstdint \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_float.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_vec.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/precision.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_mat.hpp \
- /home/a/Desktop/backup_attempt/src/glm/vec2.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_vec2.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_vec2.inl \
- /home/a/Desktop/backup_attempt/src/glm/vec3.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_vec3.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_vec3.inl \
- /home/a/Desktop/backup_attempt/src/glm/vec4.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_vec4.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_vec4.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_vec4_simd.inl \
- /home/a/Desktop/backup_attempt/src/glm/mat2x2.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_mat2x2.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_mat2x2.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/func_matrix.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../mat2x3.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat2x3.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat2x3.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../mat2x4.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat2x4.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat2x4.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../mat3x2.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat3x2.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat3x2.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../mat3x3.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat3x3.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat3x3.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../mat3x4.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat3x4.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat3x4.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../mat4x2.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat4x2.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat4x2.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../mat4x3.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat4x3.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat4x3.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../mat4x4.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat4x4.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat4x4.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_mat4x4_simd.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/func_matrix.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../geometric.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/func_geometric.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/func_geometric.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/func_exponential.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_vec1.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/type_vec1.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/func_exponential.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/func_vector_relational.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/func_vector_relational.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/func_vector_relational_simd.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/_vectorize.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/func_exponential_simd.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/../simd/exponential.h \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/func_common.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/_fixes.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/func_common.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/func_common_simd.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/../simd/common.h \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_float.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_vec.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/precision.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_mat.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/vec2.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_vec2.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_vec2.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/vec3.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_vec3.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_vec3.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/vec4.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_vec4.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_vec4.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_vec4_simd.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/mat2x2.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_mat2x2.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_mat2x2.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/func_matrix.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../mat2x3.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat2x3.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat2x3.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../mat2x4.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat2x4.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat2x4.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../mat3x2.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat3x2.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat3x2.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../mat3x3.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat3x3.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat3x3.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../mat3x4.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat3x4.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat3x4.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../mat4x2.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat4x2.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat4x2.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../mat4x3.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat4x3.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat4x3.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../mat4x4.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat4x4.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat4x4.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_mat4x4_simd.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/func_matrix.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../geometric.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/func_geometric.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/func_geometric.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/func_exponential.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_vec1.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/type_vec1.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/func_exponential.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/func_vector_relational.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/func_vector_relational.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/func_vector_relational_simd.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/_vectorize.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/func_exponential_simd.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/../simd/exponential.h \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/func_common.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/_fixes.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/func_common.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/func_common_simd.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/../simd/common.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/immintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/x86gprintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/ia32intrin.h \
@@ -267,29 +267,29 @@ CMakeFiles/firstsoloproj.dir/src/main.cpp.o: \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/prfchwintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/keylockerintrin.h \
  /usr/lib/gcc/x86_64-linux-gnu/13/include/amxfp16intrin.h \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/func_geometric_simd.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../detail/../simd/geometric.h \
- /home/a/Desktop/backup_attempt/src/glm/detail/func_matrix_simd.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../simd/matrix.h \
- /home/a/Desktop/backup_attempt/src/glm/trigonometric.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/func_trigonometric.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/func_trigonometric.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/func_trigonometric_simd.inl \
- /home/a/Desktop/backup_attempt/src/glm/exponential.hpp \
- /home/a/Desktop/backup_attempt/src/glm/common.hpp \
- /home/a/Desktop/backup_attempt/src/glm/packing.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/func_packing.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/func_packing.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_half.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/type_half.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/func_packing_simd.inl \
- /home/a/Desktop/backup_attempt/src/glm/matrix.hpp \
- /home/a/Desktop/backup_attempt/src/glm/vector_relational.hpp \
- /home/a/Desktop/backup_attempt/src/glm/integer.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/func_integer.hpp \
- /home/a/Desktop/backup_attempt/src/glm/detail/func_integer.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/func_integer_simd.inl \
- /home/a/Desktop/backup_attempt/src/glm/detail/../simd/integer.h \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/func_geometric_simd.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../detail/../simd/geometric.h \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/func_matrix_simd.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../simd/matrix.h \
+ /home/a/Desktop/FirstSoloProj/src/glm/trigonometric.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/func_trigonometric.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/func_trigonometric.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/func_trigonometric_simd.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/exponential.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/common.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/packing.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/func_packing.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/func_packing.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_half.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/type_half.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/func_packing_simd.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/matrix.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/vector_relational.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/integer.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/func_integer.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/func_integer.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/func_integer_simd.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/detail/../simd/integer.h \
  /usr/include/c++/13/string /usr/include/c++/13/bits/stringfwd.h \
  /usr/include/c++/13/bits/memoryfwd.h \
  /usr/include/c++/13/bits/char_traits.h \
@@ -379,14 +379,14 @@ CMakeFiles/firstsoloproj.dir/src/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/c++/13/bits/c++io.h \
  /usr/include/c++/13/bits/fstream.tcc /usr/include/c++/13/sstream \
  /usr/include/c++/13/bits/sstream.tcc /usr/include/c++/13/iostream \
- /home/a/Desktop/backup_attempt/src/camera.h \
- /home/a/Desktop/backup_attempt/src/glm/gtc/matrix_transform.hpp \
- /home/a/Desktop/backup_attempt/src/glm/gtc/../gtc/constants.hpp \
- /home/a/Desktop/backup_attempt/src/glm/gtc/../gtc/constants.inl \
- /home/a/Desktop/backup_attempt/src/glm/gtc/matrix_transform.inl \
- /home/a/Desktop/backup_attempt/src/model.h \
- /home/a/Desktop/backup_attempt/src/glad.h \
- /home/a/Desktop/backup_attempt/src/stb_image.h \
+ /home/a/Desktop/FirstSoloProj/src/camera.h \
+ /home/a/Desktop/FirstSoloProj/src/glm/gtc/matrix_transform.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/gtc/../gtc/constants.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/gtc/../gtc/constants.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/gtc/matrix_transform.inl \
+ /home/a/Desktop/FirstSoloProj/src/model.h \
+ /home/a/Desktop/FirstSoloProj/src/glad.h \
+ /home/a/Desktop/FirstSoloProj/src/stb_image.h \
  /usr/include/assimp/Importer.hpp /usr/include/assimp/types.h \
  /usr/include/string.h /usr/include/strings.h /usr/include/assimp/defs.h \
  /usr/include/assimp/config.h /usr/include/assimp/vector2.h \
@@ -410,8 +410,8 @@ CMakeFiles/firstsoloproj.dir/src/main.cpp.o: \
  /usr/include/assimp/camera.h /usr/include/assimp/material.h \
  /usr/include/assimp/material.inl /usr/include/assimp/anim.h \
  /usr/include/assimp/metadata.h /usr/include/assimp/postprocess.h \
- /home/a/Desktop/backup_attempt/src/mesh.h \
- /home/a/Desktop/backup_attempt/src/shader.h /usr/include/c++/13/vector \
+ /home/a/Desktop/FirstSoloProj/src/mesh.h \
+ /home/a/Desktop/FirstSoloProj/src/shader.h /usr/include/c++/13/vector \
  /usr/include/c++/13/bits/stl_uninitialized.h \
  /usr/include/c++/13/bits/stl_vector.h \
  /usr/include/c++/13/bits/stl_bvector.h \
@@ -422,12 +422,12 @@ CMakeFiles/firstsoloproj.dir/src/main.cpp.o: \
  /usr/include/c++/13/bits/stl_map.h \
  /usr/include/c++/13/bits/stl_multimap.h \
  /usr/include/c++/13/bits/erase_if.h \
- /home/a/Desktop/backup_attempt/src/stb_image.h \
- /home/a/Desktop/backup_attempt/src/glm/gtc/type_ptr.hpp \
- /home/a/Desktop/backup_attempt/src/glm/gtc/../gtc/quaternion.hpp \
- /home/a/Desktop/backup_attempt/src/glm/gtc/../gtc/quaternion.inl \
- /home/a/Desktop/backup_attempt/src/glm/gtc/../gtc/quaternion_simd.inl \
- /home/a/Desktop/backup_attempt/src/glm/gtc/type_ptr.inl \
+ /home/a/Desktop/FirstSoloProj/src/stb_image.h \
+ /home/a/Desktop/FirstSoloProj/src/glm/gtc/type_ptr.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/gtc/../gtc/quaternion.hpp \
+ /home/a/Desktop/FirstSoloProj/src/glm/gtc/../gtc/quaternion.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/gtc/../gtc/quaternion_simd.inl \
+ /home/a/Desktop/FirstSoloProj/src/glm/gtc/type_ptr.inl \
  /usr/include/c++/13/filesystem /usr/include/c++/13/bits/fs_fwd.h \
  /usr/include/c++/13/bits/chrono.h /usr/include/c++/13/ratio \
  /usr/include/c++/13/ctime /usr/include/c++/13/bits/parse_numbers.h \

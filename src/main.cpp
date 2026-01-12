@@ -16,9 +16,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 #include "stb_image.h"
-#ifdef __EMSCRIPTEN__
-#include <emscripten/emscripten.h>
-#endif
 // #include "TinyGLTF/tiny_gltf.h"
 namespace fs = std::filesystem;
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);

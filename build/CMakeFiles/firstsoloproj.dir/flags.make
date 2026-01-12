@@ -5,13 +5,13 @@
 # compile CXX with /usr/bin/c++
 C_DEFINES = 
 
-C_INCLUDES = -I/home/a/Desktop/backup_attempt/src
+C_INCLUDES = -I/home/a/Desktop/FirstSoloProj/src
 
 C_FLAGS = -g
 
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/a/Desktop/backup_attempt/src
+CXX_INCLUDES = -I/home/a/Desktop/FirstSoloProj/src
 
 CXX_FLAGS = -g
 

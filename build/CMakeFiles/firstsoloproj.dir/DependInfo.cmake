@@ -8,8 +8,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/home/a/Desktop/backup_attempt/src/glad.c" "CMakeFiles/firstsoloproj.dir/src/glad.c.o" "gcc" "CMakeFiles/firstsoloproj.dir/src/glad.c.o.d"
-  "/home/a/Desktop/backup_attempt/src/main.cpp" "CMakeFiles/firstsoloproj.dir/src/main.cpp.o" "gcc" "CMakeFiles/firstsoloproj.dir/src/main.cpp.o.d"
+  "/home/a/Desktop/FirstSoloProj/src/glad.c" "CMakeFiles/firstsoloproj.dir/src/glad.c.o" "gcc" "CMakeFiles/firstsoloproj.dir/src/glad.c.o.d"
+  "/home/a/Desktop/FirstSoloProj/src/main.cpp" "CMakeFiles/firstsoloproj.dir/src/main.cpp.o" "gcc" "CMakeFiles/firstsoloproj.dir/src/main.cpp.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

@@ -53,10 +53,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/a/Desktop/backup_attempt
+CMAKE_SOURCE_DIR = /home/a/Desktop/FirstSoloProj
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/a/Desktop/backup_attempt/build
+CMAKE_BINARY_DIR = /home/a/Desktop/FirstSoloProj/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/firstsoloproj.dir/depend.make
@@ -70,32 +70,32 @@ include CMakeFiles/firstsoloproj.dir/progress.make
 include CMakeFiles/firstsoloproj.dir/flags.make
 
 CMakeFiles/firstsoloproj.dir/src/main.cpp.o: CMakeFiles/firstsoloproj.dir/flags.make
-CMakeFiles/firstsoloproj.dir/src/main.cpp.o: /home/a/Desktop/backup_attempt/src/main.cpp
+CMakeFiles/firstsoloproj.dir/src/main.cpp.o: /home/a/Desktop/FirstSoloProj/src/main.cpp
 CMakeFiles/firstsoloproj.dir/src/main.cpp.o: CMakeFiles/firstsoloproj.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/a/Desktop/backup_attempt/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/firstsoloproj.dir/src/main.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/firstsoloproj.dir/src/main.cpp.o -MF CMakeFiles/firstsoloproj.dir/src/main.cpp.o.d -o CMakeFiles/firstsoloproj.dir/src/main.cpp.o -c /home/a/Desktop/backup_attempt/src/main.cpp
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/a/Desktop/FirstSoloProj/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/firstsoloproj.dir/src/main.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/firstsoloproj.dir/src/main.cpp.o -MF CMakeFiles/firstsoloproj.dir/src/main.cpp.o.d -o CMakeFiles/firstsoloproj.dir/src/main.cpp.o -c /home/a/Desktop/FirstSoloProj/src/main.cpp
 
 CMakeFiles/firstsoloproj.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/firstsoloproj.dir/src/main.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/a/Desktop/backup_attempt/src/main.cpp > CMakeFiles/firstsoloproj.dir/src/main.cpp.i
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/a/Desktop/FirstSoloProj/src/main.cpp > CMakeFiles/firstsoloproj.dir/src/main.cpp.i
 
 CMakeFiles/firstsoloproj.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/firstsoloproj.dir/src/main.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/a/Desktop/backup_attempt/src/main.cpp -o CMakeFiles/firstsoloproj.dir/src/main.cpp.s
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/a/Desktop/FirstSoloProj/src/main.cpp -o CMakeFiles/firstsoloproj.dir/src/main.cpp.s
 
 CMakeFiles/firstsoloproj.dir/src/glad.c.o: CMakeFiles/firstsoloproj.dir/flags.make
-CMakeFiles/firstsoloproj.dir/src/glad.c.o: /home/a/Desktop/backup_attempt/src/glad.c
+CMakeFiles/firstsoloproj.dir/src/glad.c.o: /home/a/Desktop/FirstSoloProj/src/glad.c
 CMakeFiles/firstsoloproj.dir/src/glad.c.o: CMakeFiles/firstsoloproj.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/a/Desktop/backup_attempt/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/firstsoloproj.dir/src/glad.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/firstsoloproj.dir/src/glad.c.o -MF CMakeFiles/firstsoloproj.dir/src/glad.c.o.d -o CMakeFiles/firstsoloproj.dir/src/glad.c.o -c /home/a/Desktop/backup_attempt/src/glad.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/a/Desktop/FirstSoloProj/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/firstsoloproj.dir/src/glad.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/firstsoloproj.dir/src/glad.c.o -MF CMakeFiles/firstsoloproj.dir/src/glad.c.o.d -o CMakeFiles/firstsoloproj.dir/src/glad.c.o -c /home/a/Desktop/FirstSoloProj/src/glad.c
 
 CMakeFiles/firstsoloproj.dir/src/glad.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/firstsoloproj.dir/src/glad.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/a/Desktop/backup_attempt/src/glad.c > CMakeFiles/firstsoloproj.dir/src/glad.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/a/Desktop/FirstSoloProj/src/glad.c > CMakeFiles/firstsoloproj.dir/src/glad.c.i
 
 CMakeFiles/firstsoloproj.dir/src/glad.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/firstsoloproj.dir/src/glad.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/a/Desktop/backup_attempt/src/glad.c -o CMakeFiles/firstsoloproj.dir/src/glad.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/a/Desktop/FirstSoloProj/src/glad.c -o CMakeFiles/firstsoloproj.dir/src/glad.c.s
 
 # Object files for target firstsoloproj
 firstsoloproj_OBJECTS = \
@@ -111,7 +111,7 @@ firstsoloproj: CMakeFiles/firstsoloproj.dir/build.make
 firstsoloproj: /usr/lib/x86_64-linux-gnu/libGLX.so
 firstsoloproj: /usr/lib/x86_64-linux-gnu/libOpenGL.so
 firstsoloproj: CMakeFiles/firstsoloproj.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/a/Desktop/backup_attempt/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable firstsoloproj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/a/Desktop/FirstSoloProj/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking CXX executable firstsoloproj"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/firstsoloproj.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -123,6 +123,6 @@ CMakeFiles/firstsoloproj.dir/clean:
 .PHONY : CMakeFiles/firstsoloproj.dir/clean
 
 CMakeFiles/firstsoloproj.dir/depend:
-	cd /home/a/Desktop/backup_attempt/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/a/Desktop/backup_attempt /home/a/Desktop/backup_attempt /home/a/Desktop/backup_attempt/build /home/a/Desktop/backup_attempt/build /home/a/Desktop/backup_attempt/build/CMakeFiles/firstsoloproj.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/a/Desktop/FirstSoloProj/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/a/Desktop/FirstSoloProj /home/a/Desktop/FirstSoloProj /home/a/Desktop/FirstSoloProj/build /home/a/Desktop/FirstSoloProj/build /home/a/Desktop/FirstSoloProj/build/CMakeFiles/firstsoloproj.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/firstsoloproj.dir/depend
 

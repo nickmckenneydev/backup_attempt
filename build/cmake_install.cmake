@@ -1,4 +1,4 @@
-# Install script for directory: /home/a/Desktop/backup_attempt
+# Install script for directory: /home/a/Desktop/FirstSoloProj
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/a/Desktop/backup_attempt/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/a/Desktop/FirstSoloProj/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
