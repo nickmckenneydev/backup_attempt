@@ -203,25 +203,18 @@ void main_loop()
 // ==========================================================================
 int main()
 {
-    // Init GLFW
     if (!glfwInit())
-    {
-        std::cout << "Failed to init GLFW" << std::endl;
         return -1;
-    }
 
+    // WebGL 2 Configuration
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
-    glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API); // <--- Critical for WebGL
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
     glfwWindowHint(GLFW_STENCIL_BITS, 8);
 
     window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "WebAssembly OpenGL", NULL, NULL);
-    if (window == NULL)
+    if (!window)
     {
-        std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
@@ -229,35 +222,43 @@ int main()
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
-    // Flip textures for OpenGL
+    // --- FIX 1: CAPTURE MOUSE ---
+    // This tells the browser to Lock the Pointer when you click the canvas.
+    // Without this, the camera stops moving (looks frozen).
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
     stbi_set_flip_vertically_on_load(true);
 
-    // ---------------------------------------------------------
-    // ASSET LOADING
-    // ---------------------------------------------------------
-
-    // Create the white fallback texture once
+    // 1. Create White Texture
     WhiteTexture = createWhiteTexture();
 
-    // Load Shaders
+    // 2. Load Shaders
     planetsShader = new Shader("res/shaders/planets.vs", "res/shaders/planets.fs");
 
-    // Load Models
-    // Ensure you have fixed model.h to use TinyGLTF or stripped Assimp!
+    // 3. Load Models
     modelObjectMercury = new Model("res/models/mercury/Mercury 1K.obj");
     sunGLTF = new Model("res/models/sun/scene.gltf");
     backpack = new Model("res/models/backpack/backpack.obj");
 
-    // Load Textures
+    // --- FIX 2: MANUALLY ASSIGN TEXTURES ---
+    // (This requires the updated model.h I gave you in the previous step)
+    // If you don't do this, they will look like Bricks/Walls.
+
+    // Mercury
+    modelObjectMercury->SetDiffuseTexture("res/models/mercury/Textures/Diffuse_1K.png");
+
+    // Sun (Check if this path exists in your res folder, usually it's in textures subfolder)
+    sunGLTF->SetDiffuseTexture("res/models/sun/textures/material_1_baseColor.png");
+
+    // Backpack
+    backpack->SetDiffuseTexture("res/models/backpack/diffuse.jpg");
+
+    // 4. Load Scene Textures
     WindowDiffuseMap = loadTexture("res/textures/purple.jpeg");
     WallDiffuseMap = loadTexture("res/textures/wall.jpg");
 
-    // ---------------------------------------------------------
-    // BUFFERS SETUP
-    // ---------------------------------------------------------
-
+    // 5. Setup Buffers
     float vertices[] = {
         // Back face (z = -0.5f)
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
@@ -266,7 +267,6 @@ int main()
         0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
         -0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,
-
         // Front face (z = 0.5f)
         -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
         0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
@@ -274,7 +274,6 @@ int main()
         0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
         -0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
         -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-
         // Left face (x = -0.5f)
         -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
         -0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
@@ -282,7 +281,6 @@ int main()
         -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
         -0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
         -0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-
         // Right face (x = 0.5f)
         0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
         0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
@@ -290,7 +288,6 @@ int main()
         0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
         0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
         0.5f, -0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-
         // Bottom face (y = -0.5f)
         -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
         0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
@@ -298,7 +295,6 @@ int main()
         0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
         -0.5f, -0.5f, 0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
         -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
-
         // Top face (y = 0.5f)
         -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
         0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
@@ -308,33 +304,28 @@ int main()
         -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f};
 
     float rightplane_vertices[] = {
-        // positions          // normals           // texture coords
-
-        // RIGHT FACE (x = 0.5f)
         0.5f, 0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 0.625f, 0.5f,
         0.5f, -0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.375f, 0.75f,
         0.5f, -0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 0.375f, 0.5f,
         0.5f, 0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 0.625f, 0.5f,
         0.5f, 0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.625f, 0.75f,
         0.5f, -0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.375f, 0.75f};
+
     float frontface_vertices[] = {
-        // FRONT FACE (z = 0.5f)
         0.3f, 0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.625f, 0.75f,
         -0.3f, -0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.375f, 1.0f,
         0.3f, -0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.375f, 0.75f,
         0.3f, 0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.625f, 0.75f,
         -0.3f, 0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.625f, 1.0f,
         -0.3f, -0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.375f, 1.0f,
-
-        // LEFT FACE (x = -0.5f)
+        // Left
         -0.5f, 0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 0.625f, 0.5f,
         -0.5f, -0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.375f, 0.75f,
         -0.5f, -0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 0.375f, 0.5f,
         -0.5f, 0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 0.625f, 0.5f,
         -0.5f, 0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.625f, 0.75f,
         -0.5f, -0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.375f, 0.75f,
-
-        // BACK FACE (z = -0.5f)
+        // Back
         0.3f, 0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.625f, 0.75f,
         -0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.375f, 1.0f,
         -0.3f, 0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.375f, 0.75f,
@@ -342,7 +333,6 @@ int main()
         0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.625f, 1.0f,
         -0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.375f, 1.0f};
 
-    // VBO[0]: Planets
     glGenVertexArrays(1, &PlanetsVAO);
     glGenBuffers(1, &VBO[0]);
     glBindVertexArray(PlanetsVAO);
@@ -355,7 +345,6 @@ int main()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    // VBO[1]: Right Plane
     glGenVertexArrays(1, &rightplaneVAO);
     glGenBuffers(1, &VBO[1]);
     glBindVertexArray(rightplaneVAO);
@@ -368,7 +357,6 @@ int main()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    // VBO[2]: Other Planes
     glGenVertexArrays(1, &allOtherPlanesVAO);
     glGenBuffers(1, &VBO[2]);
     glBindVertexArray(allOtherPlanesVAO);
@@ -381,12 +369,10 @@ int main()
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
-    // Start Main Loop
     emscripten_set_main_loop(main_loop, 0, 1);
 
     return 0;
 }
-
 // ==========================================================================
 // HELPERS
 // ==========================================================================
