@@ -53,7 +53,7 @@ void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 void processInput(GLFWwindow *window);
 unsigned int loadTexture(const char *path);
 unsigned int createWhiteTexture();
-
+void genVertexAttribs(GLuint *VAO, float *verticesName, GLuint *VBO, int size);
 // Draw helper
 void draw(Shader &shader, GLuint VAO, unsigned int DiffuseMap, int verticesCount, unsigned int SpecularMap = 0);
 
@@ -111,10 +111,9 @@ void main_loop()
     glStencilMask(0x00);
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-
     draw(*planetsShader, PlanetsVAO, WhiteTexture, 36);
 
-    // B. Windows
+    // Windows
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
@@ -204,6 +203,7 @@ int main()
     WhiteTexture = createWhiteTexture();
 
     planetsShader = new Shader("res/shaders/planets.vs", "res/shaders/planets.fs");
+
     std::cout << "--- FILE SYSTEM CHECK ---" << std::endl;
     std::ifstream f("res/models/mercury/Mercury.obj");
     if (f.good())
@@ -233,7 +233,6 @@ int main()
     {
         std::cout << "Loading backpack..." << std::endl;
         backpack = new Model("res/models/backpack/backpack.obj");
-
         backpack->SetDiffuseTexture("res/models/backpack/diffuse.jpg");
     }
     catch (std::exception &e)
@@ -251,13 +250,17 @@ int main()
         std::cout << "CRITICAL MODEL ERROR: " << e.what() << std::endl;
     }
 
-    // Backpack
-
-    // 4. Load Scene Textures
+    // Load Scene Textures
     WindowDiffuseMap = loadTexture("res/textures/purple.jpeg");
     WallDiffuseMap = loadTexture("res/textures/wall.jpg");
 
-    // 5. Setup Buffers
+    // Setup Buffers
+    float points[] = {
+        -0.5f, 0.5f, // top-left
+        0.5f, 0.5f,  // top-right
+        0.5f, -0.5f, // bottom-right
+        -0.5f, -0.5f // bottom-left
+    };
     float vertices[] = {
         // Back face (z = -0.5f)
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
@@ -332,45 +335,27 @@ int main()
         0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.625f, 1.0f,
         -0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.375f, 1.0f};
 
-    glGenVertexArrays(1, &PlanetsVAO);
-    glGenBuffers(1, &VBO[0]);
-    glBindVertexArray(PlanetsVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO[0]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-
-    glGenVertexArrays(1, &rightplaneVAO);
-    glGenBuffers(1, &VBO[1]);
-    glBindVertexArray(rightplaneVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rightplane_vertices), rightplane_vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-
-    glGenVertexArrays(1, &allOtherPlanesVAO);
-    glGenBuffers(1, &VBO[2]);
-    glBindVertexArray(allOtherPlanesVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO[2]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(frontface_vertices), frontface_vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    genVertexAttribs(&PlanetsVAO, vertices, &VBO[0], sizeof(vertices));
+    genVertexAttribs(&rightplaneVAO, rightplane_vertices, &VBO[1], sizeof(rightplane_vertices));
+    genVertexAttribs(&allOtherPlanesVAO, frontface_vertices, &VBO[2], sizeof(frontface_vertices));
 
     emscripten_set_main_loop(main_loop, 0, 1);
 
     return 0;
+}
+void genVertexAttribs(GLuint *VAO, float *verticesName, GLuint *VBO, int size)
+{
+    glGenVertexArrays(1, VAO);
+    glGenBuffers(1, VBO);
+    glBindVertexArray(*VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, *VBO);
+    glBufferData(GL_ARRAY_BUFFER, size, verticesName, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *)(6 * sizeof(float)));
+    glEnableVertexAttribArray(2);
 }
 
 void draw(Shader &shader, GLuint VAO, unsigned int DiffuseMap, int verticesCount, unsigned int SpecularMap)
@@ -396,7 +381,22 @@ void draw(Shader &shader, GLuint VAO, unsigned int DiffuseMap, int verticesCount
 
     glDrawArrays(GL_TRIANGLES, 0, verticesCount);
 }
+void drawPixel(Shader &shader, GLuint VAO, unsigned int DiffuseMap, int verticesCount)
+{
+    shader.use();
+    glBindVertexArray(VAO);
 
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, DiffuseMap);
+    shader.setInt("material.diffuse", 0);
+
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::scale(model, glm::vec3(10.0f));
+    model = glm::translate(model, glm::vec3(2.5f, 0.0f, 0.0f));
+    shader.setMat4("model", model);
+
+    glDrawArrays(GL_POINTS, 0, verticesCount);
+}
 unsigned int createWhiteTexture()
 {
     unsigned int textureID;
