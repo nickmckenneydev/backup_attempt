@@ -15,7 +15,8 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
-
+#include <cstdlib>
+#include <random>
 GLFWwindow *window;
 Camera camera(glm::vec3(15.0f, 5.0f, 13.0f));
 
@@ -33,14 +34,13 @@ Shader *planetsShader = nullptr;
 Model *modelObjectMercury = nullptr;
 Model *sunGLTF = nullptr;
 Model *backpack = nullptr;
-
+Mesh *pointsBlob = nullptr;
 unsigned int WindowDiffuseMap;
 unsigned int WallDiffuseMap;
 unsigned int WhiteTexture;
 
-unsigned int PlanetsVAO, rightplaneVAO, allOtherPlanesVAO;
-unsigned int VBO[3];
-
+unsigned int WallsVAO, rightplaneVAO, allOtherPlanesVAO;
+unsigned int VBO[4];
 glm::vec3 pointLightPositions[] = {
     glm::vec3(8.0f, 0.0f, 0.0f),
 };
@@ -54,7 +54,7 @@ void processInput(GLFWwindow *window);
 unsigned int loadTexture(const char *path);
 unsigned int createWhiteTexture();
 void genVertexAttribs(GLuint *VAO, float *verticesName, GLuint *VBO, int size);
-// Draw helper
+
 void draw(Shader &shader, GLuint VAO, unsigned int DiffuseMap, int verticesCount, unsigned int SpecularMap = 0);
 
 void main_loop()
@@ -111,7 +111,7 @@ void main_loop()
     glStencilMask(0x00);
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    draw(*planetsShader, PlanetsVAO, WhiteTexture, 36);
+    draw(*planetsShader, WallsVAO, WhiteTexture, 36);
 
     // Windows
     glEnable(GL_CULL_FACE);
@@ -137,13 +137,12 @@ void main_loop()
     glStencilMask(0x00);
     glStencilFunc(GL_EQUAL, 0, 0xFF);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    draw(*planetsShader, PlanetsVAO, WallDiffuseMap, 36);
+    draw(*planetsShader, WallsVAO, WallDiffuseMap, 36);
 
     // Sun Model
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(0.2f));
     planetsShader->setMat4("model", model);
-
     glStencilMask(0x00);
     glStencilFunc(GL_EQUAL, 1, 0xFF);
     sunGLTF->Draw(*planetsShader);
@@ -155,17 +154,21 @@ void main_loop()
     model = glm::translate(model, glm::vec3(2.5f, 0.0f, 0.0f));
     model = glm::rotate(model, (float)glfwGetTime() * 5.5f, glm::vec3(0.0, 1.0, 0.0));
     planetsShader->setMat4("model", model);
-
     modelObjectMercury->Draw(*planetsShader);
-
     // Backpack Model
-    model = glm::mat4(1.0f);
-    model = glm::scale(model, glm::vec3(1.2f));
-    planetsShader->setMat4("model", model);
+    // model = glm::mat4(1.0f);
+    // model = glm::scale(model, glm::vec3(1.2f));
+    // planetsShader->setMat4("model", model);
 
+    // glStencilMask(0x00);
+    // glStencilFunc(GL_EQUAL, 2, 0xFF);
+    // backpack->Draw(*planetsShader);
+
+    // Pixels!!!!
+    planetsShader->use();
     glStencilMask(0x00);
     glStencilFunc(GL_EQUAL, 2, 0xFF);
-    backpack->Draw(*planetsShader);
+    pointsBlob->Draw(*planetsShader);
 
     // Reset State
     glStencilMask(0xFF);
@@ -218,7 +221,6 @@ int main()
         std::cout << "FAILURE: 'Mercury.obj' DOES NOT EXIST." << std::endl;
     }
     std::cout << "-------------------------" << std::endl;
-
     try
     {
         std::cout << "Loading Mercury..." << std::endl;
@@ -249,18 +251,57 @@ int main()
     {
         std::cout << "CRITICAL MODEL ERROR: " << e.what() << std::endl;
     }
-
-    // Load Scene Textures
     WindowDiffuseMap = loadTexture("res/textures/purple.jpeg");
     WallDiffuseMap = loadTexture("res/textures/wall.jpg");
+    std::cout << "Loading Points..." << std::endl;
+    std::random_device randomDevice;
+    std::mt19937 gen(randomDevice());
+    std::uniform_real_distribution<float> dis(-5.0f, 5.0f);
 
-    // Setup Buffers
-    float points[] = {
-        -0.5f, 0.5f, // top-left
-        0.5f, 0.5f,  // top-right
-        0.5f, -0.5f, // bottom-right
-        -0.5f, -0.5f // bottom-left
-    };
+    vector<Vertex> PointVertices;
+    vector<unsigned int> indices;
+    vector<Texture> textures;
+
+    float pixelSize = 0.01f;
+
+    for (unsigned int i = 0; i < 10000; i++)
+    {
+        glm::vec3 center(dis(gen), dis(gen), dis(gen));
+
+        glm::vec3 positions[4] = {
+            center + glm::vec3(-pixelSize, -pixelSize, 0.0f),
+            center + glm::vec3(pixelSize, -pixelSize, 0.0f),
+            center + glm::vec3(pixelSize, pixelSize, 0.0f),
+            center + glm::vec3(-pixelSize, pixelSize, 0.0f)};
+
+        glm::vec2 uvs[4] = {
+            glm::vec2(0.0f, 0.0f),
+            glm::vec2(1.0f, 0.0f),
+            glm::vec2(1.0f, 1.0f),
+            glm::vec2(0.0f, 1.0f)};
+
+        unsigned int startIndex = PointVertices.size();
+        for (int j = 0; j < 4; j++)
+        {
+            Vertex v;
+            v.Position = positions[j];
+            v.Normal = glm::vec3(0.0f, 0.0f, 1.0f);
+            v.TexCoords = uvs[j];
+
+            PointVertices.push_back(v);
+        }
+
+        // 1 QUAD
+        indices.push_back(startIndex + 0);
+        indices.push_back(startIndex + 1);
+        indices.push_back(startIndex + 2);
+        indices.push_back(startIndex + 0);
+        indices.push_back(startIndex + 2);
+        indices.push_back(startIndex + 3);
+    }
+
+    pointsBlob = new Mesh(PointVertices, indices, textures);
+
     float vertices[] = {
         // Back face (z = -0.5f)
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
@@ -335,7 +376,7 @@ int main()
         0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.625f, 1.0f,
         -0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.375f, 1.0f};
 
-    genVertexAttribs(&PlanetsVAO, vertices, &VBO[0], sizeof(vertices));
+    genVertexAttribs(&WallsVAO, vertices, &VBO[0], sizeof(vertices));
     genVertexAttribs(&rightplaneVAO, rightplane_vertices, &VBO[1], sizeof(rightplane_vertices));
     genVertexAttribs(&allOtherPlanesVAO, frontface_vertices, &VBO[2], sizeof(frontface_vertices));
 
@@ -381,22 +422,7 @@ void draw(Shader &shader, GLuint VAO, unsigned int DiffuseMap, int verticesCount
 
     glDrawArrays(GL_TRIANGLES, 0, verticesCount);
 }
-void drawPixel(Shader &shader, GLuint VAO, unsigned int DiffuseMap, int verticesCount)
-{
-    shader.use();
-    glBindVertexArray(VAO);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, DiffuseMap);
-    shader.setInt("material.diffuse", 0);
-
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::scale(model, glm::vec3(10.0f));
-    model = glm::translate(model, glm::vec3(2.5f, 0.0f, 0.0f));
-    shader.setMat4("model", model);
-
-    glDrawArrays(GL_POINTS, 0, verticesCount);
-}
 unsigned int createWhiteTexture()
 {
     unsigned int textureID;
@@ -444,7 +470,7 @@ unsigned int loadTexture(char const *path)
 
     return textureID;
 }
-// test
+
 void processInput(GLFWwindow *window)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
