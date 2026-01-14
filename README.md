@@ -18,7 +18,7 @@ emcc src/main.cpp src/tinygltf.cpp -o build-wasm/index.js \
   -s ALLOW_MEMORY_GROWTH=1 \
   --preload-file src/res@/res \
   -O2
-
+TEST
 
 emcc src/main.cpp src/tinygltf.cpp -o build-wasm/index.html \
   -I src/vendor \
