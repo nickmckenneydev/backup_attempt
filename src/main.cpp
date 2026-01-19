@@ -16,6 +16,8 @@
 #include <iostream>
 #include <vector>
 #include <cstdlib>
+#include <stdio.h>
+#include <string.h>
 #include <random>
 GLFWwindow *window;
 Camera camera(glm::vec3(0.0f, 3.0f, 33.0f));
@@ -56,7 +58,7 @@ unsigned int loadTexture(const char *path);
 unsigned int createWhiteTexture();
 void genVertexAttribs(GLuint *VAO, float *verticesName, GLuint *VBO, int size);
 
-void draw(Shader &shader, GLuint VAO, unsigned int DiffuseMap, int verticesCount, unsigned int SpecularMap = 0);
+void draw(Shader &shader, GLuint VAO, unsigned int DiffuseMap, unsigned int SpecularMap, int verticesCount, glm::vec3 localCenter);
 // test
 void main_loop()
 {
@@ -83,12 +85,10 @@ void main_loop()
     planetsShader->setInt("material.specular", 1);
     planetsShader->setFloat("material.shininess", 3.0f);
 
-    // Directional Light
     planetsShader->setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
     planetsShader->setVec3("dirLight.ambient", 0.3f, 0.24f, 0.14f);
     planetsShader->setVec3("dirLight.diffuse", 0.7f, 0.42f, 0.26f);
     planetsShader->setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
-
     // Point Light
     planetsShader->setVec3("pointLights[0].position", pointLightPositions[0]);
     planetsShader->setVec3("pointLights[0].ambient", pointLightColors[0] * 0.1f);
@@ -97,7 +97,6 @@ void main_loop()
     planetsShader->setFloat("pointLights[0].constant", 1.0f);
     planetsShader->setFloat("pointLights[0].linear", 0.09f);
     planetsShader->setFloat("pointLights[0].quadratic", 0.032f);
-
     // Global Render State
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
     glEnable(GL_DEPTH_TEST);
@@ -113,7 +112,7 @@ void main_loop()
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 
-    draw(*planetsShader, WallsVAO, WhiteTexture, 36);
+    draw(*planetsShader, WallsVAO, WhiteTexture, WhiteTexture, 36, glm::vec3(0.0f, 0.0f, 0.0f));
 
     // // Windows
     glEnable(GL_CULL_FACE);
@@ -122,35 +121,39 @@ void main_loop()
     glDepthMask(GL_FALSE);
 
     // // Plane One Window
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    glPolygonOffset(-1.0f, -1.0f);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glStencilMask(0xFF);
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-    draw(*planetsShader, planeOneVAO, WindowDiffuseMap, 6);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    draw(*planetsShader, planeOneVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.5f, 0.0f, 0.0f));
+    glDisable(GL_POLYGON_OFFSET_FILL);
+    glDisable(GL_BLEND);
 
     // Plane Two Window
     glStencilMask(0xFF);
     glStencilFunc(GL_NOTEQUAL, 0x2, 0xFF);
-    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-    draw(*planetsShader, planeTwoVAO, WindowDiffuseMap, 6);
-    // Plane Three Window
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+    draw(*planetsShader, planeTwoVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.0f, 0.0f, 0.5f)); // Plane Three Window
     glStencilMask(0xFF);
     glStencilFunc(GL_NOTEQUAL, 0x3, 0xFF);
-    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-    draw(*planetsShader, planeThreeVAO, WindowDiffuseMap, 6);
-    // Plane Four Window
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    draw(*planetsShader, planeThreeVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(-0.5f, 0.0f, 0.0f)); // Plane Four Window
     glStencilMask(0xFF);
     glStencilFunc(GL_NOTEQUAL, 0x4, 0xFF);
-    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-    draw(*planetsShader, planeFourVAO, WindowDiffuseMap, 6);
-    // Exterior Walls
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+    draw(*planetsShader, planeFourVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.0f, 0.0f, -0.5f)); // Exterior Walls
     glDisable(GL_CULL_FACE);
     glDepthMask(GL_TRUE);
     glStencilMask(0x00);
     glStencilFunc(GL_EQUAL, 0, 0xFF);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    draw(*planetsShader, spaceFabricPlaneVAO, WindowDiffuseMap, 6);
-
-    draw(*planetsShader, WallsVAO, WallDiffuseMap, 36);
+    draw(*planetsShader, spaceFabricPlaneVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.0f, -0.5f, 0.0f));
+    draw(*planetsShader, WallsVAO, WallDiffuseMap, WindowDiffuseMap, 36, glm::vec3(0.0f, 0.0f, 0.0f));
 
     // Sun Model
     glStencilMask(0x00);
@@ -168,9 +171,6 @@ void main_loop()
     model = glm::rotate(model, (float)glfwGetTime() * 7.5f, glm::vec3(0.0, 1.0, 0.0));
     planetsShader->setMat4("model", model);
     modelObjectMercury->Draw(*planetsShader);
-    // Pixels!!!!
-    model = glm::mat4(1.0f);
-    pointsBlob->Draw(*planetsShader);
     //-----------------------------------------------------------------------//
     // Backpack Model
     glStencilMask(0x00);
@@ -259,7 +259,7 @@ int main()
     sunGLTF = new Model("res/models/sun/scene.gltf");
     sunGLTF->SetDiffuseTexture("res/models/sun/textures/material_1_baseColor.png");
 
-    WindowDiffuseMap = loadTexture("res/textures/purple.jpeg");
+    WindowDiffuseMap = loadTexture("res/textures/window.png");
     WallDiffuseMap = loadTexture("res/textures/wall.jpg");
 
     std::random_device randomDevice;
@@ -353,34 +353,41 @@ int main()
         0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
         -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
         -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f};
+
     float planeOneVerticies[] = {
-        0.5f, 0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 0.625f, 0.5f,
-        0.5f, -0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.375f, 0.75f,
-        0.5f, -0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 0.375f, 0.5f,
-        0.5f, 0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 0.625f, 0.5f,
-        0.5f, 0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.625f, 0.75f,
-        0.5f, -0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.375f, 0.75f};
+        0.5f, 0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,  // Top Right
+        0.5f, -0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  // Bottom Left
+        0.5f, -0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom Right
+        0.5f, 0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+        0.5f, 0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+        0.5f, -0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+
+    // Plane Two (Front Face - z = 0.5)
     float planeTwoVerticies[] = {
-        0.3f, 0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.625f, 0.75f,
-        -0.3f, -0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.375f, 1.0f,
-        0.3f, -0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.375f, 0.75f,
-        0.3f, 0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.625f, 0.75f,
-        -0.3f, 0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.625f, 1.0f,
-        -0.3f, -0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.375f, 1.0f};
+        0.3f, 0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,   // Top Right
+        -0.3f, -0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom Left
+        0.3f, -0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,  // Bottom Right
+        0.3f, 0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
+        -0.3f, 0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
+        -0.3f, -0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f};
+
+    // Plane Three (Left Face - x = -0.5)
     float planeThreeVerticies[] = {
-        -0.5f, 0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 0.625f, 0.5f,
-        -0.5f, -0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.375f, 0.75f,
-        -0.5f, -0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 0.375f, 0.5f,
-        -0.5f, 0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 0.625f, 0.5f,
-        -0.5f, 0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.625f, 0.75f,
-        -0.5f, -0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.375f, 0.75f};
+        -0.5f, 0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // Top Right
+        -0.5f, -0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Bottom Left
+        -0.5f, -0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,  // Bottom Right
+        -0.5f, 0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
+        -0.5f, 0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
+        -0.5f, -0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+
+    // Plane Four (Back Face - z = -0.5)
     float planeFourVerticies[] = {
-        0.3f, 0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.625f, 0.75f,
-        -0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.375f, 1.0f,
-        -0.3f, 0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.375f, 0.75f,
-        0.3f, 0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.625f, 0.75f,
-        0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.625f, 1.0f,
-        -0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.375f, 1.0f};
+        0.3f, 0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,   // Top Right
+        -0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, // Bottom Left
+        -0.3f, 0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,  // Top Left
+        0.3f, 0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
+        0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, // Bottom Right
+        -0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f};
     float spaceFabricVertices[] = {
         15.0f, -0.5f, 15.0f, 0.0f, 0.0f, -1.0f, 2.0f, 0.0f,
         -15.0f, -0.5f, 15.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
@@ -416,7 +423,7 @@ void genVertexAttribs(GLuint *VAO, float *verticesName, GLuint *VBO, int size)
     glEnableVertexAttribArray(2);
 }
 
-void draw(Shader &shader, GLuint VAO, unsigned int DiffuseMap, int verticesCount, unsigned int SpecularMap)
+void draw(Shader &shader, GLuint VAO, unsigned int DiffuseMap, unsigned int SpecularMap, int verticesCount, glm::vec3 localCenter)
 {
     shader.use();
     glBindVertexArray(VAO);
@@ -425,16 +432,13 @@ void draw(Shader &shader, GLuint VAO, unsigned int DiffuseMap, int verticesCount
     glBindTexture(GL_TEXTURE_2D, DiffuseMap);
     shader.setInt("material.diffuse", 0);
 
-    if (SpecularMap != 0)
-    {
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, SpecularMap);
-        shader.setInt("material.specular", 1);
-    }
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, SpecularMap);
+    shader.setInt("material.specular", 1);
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(10.0f));
-    if (doRotate == true)
+    if (doRotate)
         model = glm::rotate(model, (float)glfwGetTime() * 1.0f, glm::vec3(0.0, 1.0, 0.0));
     shader.setMat4("model", model);
 
@@ -466,19 +470,28 @@ unsigned int loadTexture(char const *path)
 
     if (data)
     {
-
         glBindTexture(GL_TEXTURE_2D, textureID);
 
         glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        char *window = "res/textures/window.png";
+        if (!strcmp(path, window))
+        {
+            cout << path << "is equal to" << window << endl;
+            glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        }
+        else
+        {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            cout << path << "FAILED" << window << endl;
+        }
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
         stbi_image_free(data);
     }
     else
