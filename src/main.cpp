@@ -41,14 +41,9 @@ bool doRotate = true;
 unsigned int WindowDiffuseMap;
 unsigned int WallDiffuseMap;
 unsigned int WhiteTexture;
-
+unsigned int FloorDiffuseMap;
 unsigned int WallsVAO, planeOneVAO, planeTwoVAO, planeThreeVAO, planeFourVAO, spaceFabricPlaneVAO;
 unsigned int VBO[8];
-glm::vec3 pointLightPositions[] = {
-    glm::vec3(0.0f, 0.0f, 0.0f),
-};
-glm::vec3 pointLightColors[] = {
-    glm::vec3(1.0f, 0.0f, 0.0f)};
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
@@ -81,22 +76,6 @@ void main_loop()
     planetsShader->setMat4("view", view);
     planetsShader->setVec3("viewPos", camera.Position);
 
-    // Material
-    planetsShader->setInt("material.specular", 1);
-    planetsShader->setFloat("material.shininess", 3.0f);
-
-    planetsShader->setVec3("dirLight.direction", -0.2f, -1.0f, -0.3f);
-    planetsShader->setVec3("dirLight.ambient", 0.3f, 0.24f, 0.14f);
-    planetsShader->setVec3("dirLight.diffuse", 0.7f, 0.42f, 0.26f);
-    planetsShader->setVec3("dirLight.specular", 0.5f, 0.5f, 0.5f);
-    // Point Light
-    planetsShader->setVec3("pointLights[0].position", pointLightPositions[0]);
-    planetsShader->setVec3("pointLights[0].ambient", pointLightColors[0] * 0.1f);
-    planetsShader->setVec3("pointLights[0].diffuse", pointLightColors[0]);
-    planetsShader->setVec3("pointLights[0].specular", pointLightColors[0]);
-    planetsShader->setFloat("pointLights[0].constant", 1.0f);
-    planetsShader->setFloat("pointLights[0].linear", 0.09f);
-    planetsShader->setFloat("pointLights[0].quadratic", 0.032f);
     // Global Render State
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
     glEnable(GL_DEPTH_TEST);
@@ -115,10 +94,8 @@ void main_loop()
     draw(*planetsShader, WallsVAO, WhiteTexture, WhiteTexture, 36, glm::vec3(0.0f, 0.0f, 0.0f));
 
     // // Windows
-    glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
-    glDepthMask(GL_FALSE);
 
     // // Plane One Window
     glEnable(GL_POLYGON_OFFSET_FILL);
@@ -152,16 +129,20 @@ void main_loop()
     glStencilMask(0x00);
     glStencilFunc(GL_EQUAL, 0, 0xFF);
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    draw(*planetsShader, spaceFabricPlaneVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.0f, -0.5f, 0.0f));
+    draw(*planetsShader, spaceFabricPlaneVAO, FloorDiffuseMap, FloorDiffuseMap, 6, glm::vec3(0.0f, -0.5f, 0.0f));
     draw(*planetsShader, WallsVAO, WallDiffuseMap, WindowDiffuseMap, 36, glm::vec3(0.0f, 0.0f, 0.0f));
+    //-----------------------------------------------------------------------//
 
     // Sun Model
+    glEnable(GL_POLYGON_OFFSET_FILL);
+    glPolygonOffset(1.0f, 1.0f);
     glStencilMask(0x00);
     glStencilFunc(GL_EQUAL, 1, 0xFF);
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(0.2f));
     planetsShader->setMat4("model", model);
     sunGLTF->Draw(*planetsShader);
+    glDisable(GL_POLYGON_OFFSET_FILL);
 
     // Mercury Model
     model = glm::mat4(1.0f);
@@ -261,7 +242,7 @@ int main()
 
     WindowDiffuseMap = loadTexture("res/textures/window.png");
     WallDiffuseMap = loadTexture("res/textures/wall.jpg");
-
+    FloorDiffuseMap = loadTexture("res/textures/container.jpg");
     std::random_device randomDevice;
     std::mt19937 gen(randomDevice());
     std::uniform_real_distribution<float> dis(-50.0f, 50.0f);
@@ -430,11 +411,8 @@ void draw(Shader &shader, GLuint VAO, unsigned int DiffuseMap, unsigned int Spec
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, DiffuseMap);
-    shader.setInt("material.diffuse", 0);
 
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, SpecularMap);
-    shader.setInt("material.specular", 1);
+    shader.setInt("texture1", 0);
 
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(10.0f));
