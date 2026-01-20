@@ -1,7 +1,14 @@
+#ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #define GLFW_INCLUDE_ES3
 #include <GLFW/glfw3.h>
 #include <GLES3/gl3.h>
+#else
+#include <glad/glad.h> // Desktop loader handles everything
+#include <GLFW/glfw3.h>
+#endif
+#define GLFW_INCLUDE_ES3
+#include <GLFW/glfw3.h>
 
 // Project Header
 #include "shader.h"
@@ -206,19 +213,35 @@ int main()
     if (!glfwInit())
         return -1;
 
-    // WebGL 2 Configuration
+    // Desktop OpenGL Configuration (matches your shader version)
+#ifdef __EMSCRIPTEN__
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+#else
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+#endif
+
     glfwWindowHint(GLFW_STENCIL_BITS, 8);
 
-    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "WebAssembly OpenGL", NULL, NULL);
+    window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Desktop OpenGL Solar Project", NULL, NULL);
     if (!window)
     {
         glfwTerminate();
         return -1;
     }
     glfwMakeContextCurrent(window);
+
+    // --- CRITICAL FOR NATIVE ---
+#ifndef __EMSCRIPTEN__
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cout << "Failed to initialize GLAD" << std::endl;
+        return -1;
+    }
+#endif
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
@@ -385,8 +408,17 @@ int main()
     genVertexAttribs(&planeFourVAO, planeFourVerticies, &VBO[4], sizeof(planeFourVerticies));
     genVertexAttribs(&spaceFabricPlaneVAO, spaceFabricVertices, &VBO[5], sizeof(spaceFabricVertices));
 
+// --- The Main Loop Swap ---
+#ifdef __EMSCRIPTEN__
     emscripten_set_main_loop(main_loop, 0, 1);
+#else
+    while (!glfwWindowShouldClose(window))
+    {
+        main_loop();
+    }
+#endif
 
+    glfwTerminate();
     return 0;
 }
 void genVertexAttribs(GLuint *VAO, float *verticesName, GLuint *VBO, int size)
@@ -454,7 +486,7 @@ unsigned int loadTexture(char const *path)
 
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-        char *window = "res/textures/window.png";
+        const char *window = "res/textures/window.png";
         if (!strcmp(path, window))
         {
             cout << path << "is equal to" << window << endl;
