@@ -65,13 +65,13 @@ void draw(Shader &shader, GLuint VAO, unsigned int DiffuseMap, unsigned int Spec
 // test
 void main_loop()
 {
-
     float currentFrame = static_cast<float>(glfwGetTime());
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
 
     processInput(window);
 
+    // 0. Clear Buffers
     glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
     glClearStencil(0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -90,61 +90,56 @@ void main_loop()
     glDepthFunc(GL_LESS);
     glEnable(GL_STENCIL_TEST);
 
-    // Interior Walls
+    // ---------------------------------------------------------
+    // STEP 1: DRAW SOLID WALLS (Stencil = 0)
+    // ---------------------------------------------------------
+    // We draw the box. We write 0 to the stencil so planets don't draw on top of walls.
     glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
     glFrontFace(GL_CCW);
+
+    glStencilMask(0xFF);
+    glStencilFunc(GL_ALWAYS, 0, 0xFF);
+
+    // Draw the walls (The shell)
+    draw(*planetsShader, WallscutoutWallVAO, InteriorWallTexture, InteriorWallTexture, 108, glm::vec3(0.0f));
+
+    // ---------------------------------------------------------
+    // STEP 2: STENCIL MASKING (Stencil = 1, 2, 3, 4)
+    // ---------------------------------------------------------
+    // We draw the window geometries but INVISIBLE (ColorMask False).
+    // CRITICAL: We use 'WallDiffuseMap' (Solid) so the WHOLE window square gets stamped.
+    // If we used the Window texture, the transparent glass pixels would be discarded and not stamped.
+
+    glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
     glDepthMask(GL_FALSE);
-    glStencilMask(0x00);
+    glStencilMask(0xFF);
+
+    // Window 1 -> Stencil 1
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    draw(*planetsShader, planeOneVAO, WallDiffuseMap, WallDiffuseMap, 6, glm::vec3(0.5f, 0.0f, 0.0f));
+
+    // Window 2 -> Stencil 2
+    glStencilFunc(GL_ALWAYS, 2, 0xFF);
+    draw(*planetsShader, planeTwoVAO, WallDiffuseMap, WallDiffuseMap, 6, glm::vec3(0.0f, 0.0f, 0.5f));
+
+    // Window 3 -> Stencil 3
+    glStencilFunc(GL_ALWAYS, 3, 0xFF);
+    draw(*planetsShader, planeThreeVAO, WallDiffuseMap, WallDiffuseMap, 6, glm::vec3(-0.5f, 0.0f, 0.0f));
+
+    // Window 4 -> Stencil 4
+    glStencilFunc(GL_ALWAYS, 4, 0xFF);
+    draw(*planetsShader, planeFourVAO, WallDiffuseMap, WallDiffuseMap, 6, glm::vec3(0.0f, 0.0f, -0.5f));
+
+    // Re-enable writing
     glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    draw(*planetsShader, WallsVAO, InteriorWallTexture, InteriorWallTexture, 36, glm::vec3(0.0f, 0.0f, 0.0f));
-    draw(*planetsShader, planeOneVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.5f, 0.0f, 0.0f));
-    draw(*planetsShader, planeTwoVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.0f, 0.0f, 0.5f));
-    draw(*planetsShader, planeThreeVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(-0.5f, 0.0f, 0.0f));
-    draw(*planetsShader, planeFourVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.0f, 0.0f, -0.5f));
-    // // Windows
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glCullFace(GL_BACK);
-    glFrontFace(GL_CCW);
-    // Window 1
-
-    glStencilMask(0xFF);
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    draw(*planetsShader, planeOneVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.5f, 0.0f, 0.0f));
-
-    // Window 2
-    glStencilMask(0xFF);
-    glStencilFunc(GL_NOTEQUAL, 0x2, 0xFF);
-    draw(*planetsShader, planeTwoVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.0f, 0.0f, 0.5f));
-    // Window 3
-    glStencilMask(0xFF);
-    glStencilFunc(GL_NOTEQUAL, 0x3, 0xFF);
-    draw(*planetsShader, planeThreeVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(-0.5f, 0.0f, 0.0f));
-    // Window 4
-    glStencilMask(0xFF);
-    glStencilFunc(GL_NOTEQUAL, 0x4, 0xFF);
-    draw(*planetsShader, planeFourVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.0f, 0.0f, -0.5f));
-    // WALLS
-    glDisable(GL_CULL_FACE);
     glDepthMask(GL_TRUE);
+    glStencilFunc(GL_NOTEQUAL, 0, 0xFF);
     glStencilMask(0x00);
-    glStencilFunc(GL_EQUAL, 0, 0xFF);
-    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-    // glDepthMask(GL_TRUE);
-    draw(*planetsShader, spaceFabricPlaneVAO, FloorDiffuseMap, FloorDiffuseMap, 6, glm::vec3(0.0f, -0.5f, 0.0f));
-    draw(*planetsShader, WallscutoutWallVAO, WallDiffuseMap, WindowDiffuseMap, 108, glm::vec3(0.0f, 0.0f, 0.0f));
-    //-----------------------------------------------------------------------//
-    glDisable(GL_BLEND);
+
     // Sun Model
     glEnable(GL_POLYGON_OFFSET_FILL);
     glPolygonOffset(1.0f, 1.0f);
-    glStencilMask(0x00);
-    glStencilFunc(GL_EQUAL, 1, 0xFF);
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(0.2f));
     planetsShader->setMat4("model", model);
@@ -159,15 +154,14 @@ void main_loop()
     model = glm::rotate(model, (float)glfwGetTime() * 7.5f, glm::vec3(0.0, 1.0, 0.0));
     planetsShader->setMat4("model", model);
     modelObjectMercury->Draw(*planetsShader);
-    //-----------------------------------------------------------------------//
-    // Backpack Model
-    glStencilMask(0x00);
-    glStencilFunc(GL_EQUAL, 2, 0xFF);
+
+    // Backpack
     model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(1.2f));
     planetsShader->setMat4("model", model);
     backpack->Draw(*planetsShader);
-    // Pixels!!!!
+
+    // Points
     model = glm::mat4(1.0f);
     model = glm::scale(model, glm::vec3(3.0f));
     model = glm::rotate(model, (float)glfwGetTime() * glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0));
@@ -175,35 +169,28 @@ void main_loop()
     model = glm::rotate(model, (float)glfwGetTime() * 7.5f, glm::vec3(0.0, 1.0, 0.0));
     planetsShader->setMat4("model", model);
     pointsBlob->Draw(*planetsShader);
-    //-----------------------------------------------------------------------//
-    // Backpack Model
-    glm::vec3 pointLightColors[] = {
-        glm::vec3(0.0f, 0.0f, 0.0f)};
-    glStencilMask(0x00);
-    glStencilFunc(GL_EQUAL, 4, 0xFF);
-    model = glm::mat4(1.0f);
-    model = glm::scale(model, glm::vec3(1.2f));
-    planetsShader->setMat4("model", model);
-    backpack->Draw(*planetsShader);
-    // Pixels!!!!
-    model = glm::mat4(1.0f);
-    model = glm::scale(model, glm::vec3(3.0f));
-    model = glm::rotate(model, (float)glfwGetTime() * glm::radians(90.0f), glm::vec3(0.0, 1.0, 0.0));
-    model = glm::translate(model, glm::vec3(2.5f, 0.0f, 0.0f));
-    model = glm::rotate(model, (float)glfwGetTime() * 7.5f, glm::vec3(0.0, 1.0, 0.0));
-    planetsShader->setMat4("model", model);
-    pointsBlob->Draw(*planetsShader);
-    //-----------------------------------------------------------------------//
-    // Backpack Model
-    glStencilMask(0x00);
-    glStencilFunc(GL_EQUAL, 3, 0xFF);
-    model = glm::mat4(1.0f);
-    model = glm::scale(model, glm::vec3(1.2f));
-    planetsShader->setMat4("model", model);
-    backpack->Draw(*planetsShader);
-    // Reset State
+
+    // ---------------------------------------------------------
+    // STEP 4: DRAW VISIBLE WINDOWS (Glass & Bars)
+    // ---------------------------------------------------------
+    // Draw the actual window texture on top so we can see the frame/tint.
+    // Use GL_ALWAYS because the glass is transparent and needs to blend over planets.
+
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
     glStencilMask(0xFF);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glCullFace(GL_BACK);
+
+    draw(*planetsShader, planeOneVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.5f, 0.0f, 0.0f));
+    draw(*planetsShader, planeTwoVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.0f, 0.0f, 0.5f));
+    draw(*planetsShader, planeThreeVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(-0.5f, 0.0f, 0.0f));
+    draw(*planetsShader, planeFourVAO, WindowDiffuseMap, WindowDiffuseMap, 6, glm::vec3(0.0f, 0.0f, -0.5f));
+
+    glDisable(GL_BLEND);
+
+    // Swap
     glfwSwapBuffers(window);
     glfwPollEvents();
 }
@@ -213,7 +200,6 @@ int main()
     if (!glfwInit())
         return -1;
 
-    // Desktop OpenGL Configuration (matches your shader version)
 #ifdef __EMSCRIPTEN__
     glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_ES_API);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -234,7 +220,6 @@ int main()
     }
     glfwMakeContextCurrent(window);
 
-    // --- CRITICAL FOR NATIVE ---
 #ifndef __EMSCRIPTEN__
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -265,6 +250,7 @@ int main()
     WindowDiffuseMap = loadTexture("res/textures/window.png");
     WallDiffuseMap = loadTexture("res/textures/wall.jpg");
     FloorDiffuseMap = loadTexture("res/textures/container.jpg");
+
     std::random_device randomDevice;
     std::mt19937 gen(randomDevice());
     std::uniform_real_distribution<float> dis(-50.0f, 50.0f);
@@ -312,6 +298,8 @@ int main()
     }
 
     pointsBlob = new Mesh(PointVertices, indices, textures);
+
+    // --- VERTEX DATA ---
     float cutoutWallVertices[] = {
         // FRONT FACE (Z = 0.5)
         -0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.5f, -0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.2f,
@@ -360,6 +348,7 @@ int main()
         // TOP FACE (Y = 0.5)
         -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
         0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f};
+
     float vertices[] = {
         // Back face (z = -0.5f)
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
@@ -405,39 +394,51 @@ int main()
         -0.5f, 0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f};
 
     float planeOneVerticies[] = {
-        0.5f, 0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,  // Top Right
-        0.5f, -0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  // Bottom Left
-        0.5f, -0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom Right
-        0.5f, 0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-        0.5f, 0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        0.5f, -0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+        0.0f, 0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,   // Top Front
+        0.0f, -0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, // Bottom Back
+        0.0f, -0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,  // Bottom Front
 
-    // Plane Two (Front Face - z = 0.5)
+        0.0f, 0.3f, 0.3f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,  // Top Front
+        0.0f, 0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // Top Back
+        0.0f, -0.3f, -0.3f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f // Bottom Back
+    };
+
+    // Plane Two (Front Face) - Facing +Z
+    // Corrected to be CCW when looking from the Front
     float planeTwoVerticies[] = {
-        0.3f, 0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,   // Top Right
-        -0.3f, -0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom Left
-        0.3f, -0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,  // Bottom Right
-        0.3f, 0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-        -0.3f, 0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        -0.3f, -0.3f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f};
+        0.3f, 0.3f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,   // Top Right
+        -0.3f, -0.3f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // Bottom Left
+        0.3f, -0.3f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,  // Bottom Right
 
-    // Plane Three (Left Face - x = -0.5)
+        0.3f, 0.3f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,  // Top Right
+        -0.3f, 0.3f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, // Top Left
+        -0.3f, -0.3f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f // Bottom Left
+    };
+
+    // Plane Three (Left Face) - Facing -X
+    // Corrected to be CCW when looking from the Left
     float planeThreeVerticies[] = {
-        -0.5f, 0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,   // Top Right
-        -0.5f, -0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Bottom Left
-        -0.5f, -0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,  // Bottom Right
-        -0.5f, 0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-        -0.5f, 0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        -0.5f, -0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+        0.0f, 0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,  // Top Back
+        0.0f, -0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,  // Bottom Front
+        0.0f, -0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f, // Bottom Back
 
-    // Plane Four (Back Face - z = -0.5)
+        0.0f, 0.3f, -0.3f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, // Top Back
+        0.0f, 0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,  // Top Front
+        0.0f, -0.3f, 0.3f, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f  // Bottom Front
+    };
+
+    // Plane Four (Back Face) - Facing -Z
+    // Corrected to be CCW when looking from the Back
     float planeFourVerticies[] = {
-        0.3f, 0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,   // Top Right
-        -0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, // Bottom Left
-        -0.3f, 0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,  // Top Left
-        0.3f, 0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
-        0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, // Bottom Right
-        -0.3f, -0.3f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f};
+        -0.3f, 0.3f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,  // Top Left
+        0.3f, -0.3f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,  // Bottom Right
+        -0.3f, -0.3f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f, // Bottom Left
+
+        -0.3f, 0.3f, 0.0f, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f, // Top Left
+        0.3f, 0.3f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,  // Top Right
+        0.3f, -0.3f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f  // Bottom Right
+    };
+
     float spaceFabricVertices[] = {
         15.0f, -0.5f, 15.0f, 0.0f, 0.0f, -1.0f, 2.0f, 0.0f,
         -15.0f, -0.5f, 15.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
@@ -493,9 +494,13 @@ void draw(Shader &shader, GLuint VAO, unsigned int DiffuseMap, unsigned int Spec
     shader.setInt("texture1", 0);
 
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::scale(model, glm::vec3(10.0f));
+
     if (doRotate)
         model = glm::rotate(model, (float)glfwGetTime() * 1.0f, glm::vec3(0.0, 1.0, 0.0));
+
+    model = glm::scale(model, glm::vec3(10.0f));
+    model = glm::translate(model, localCenter);
+
     shader.setMat4("model", model);
 
     glDrawArrays(GL_TRIANGLES, 0, verticesCount);
